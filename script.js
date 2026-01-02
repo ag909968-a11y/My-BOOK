@@ -7,28 +7,32 @@ let pdfDoc = null,
     canvas = document.getElementById('pdf-canvas'), 
     ctx = canvas.getContext('2d');
 
+// 1. OPEN THE BOOK
 async function loadPDF(url) {
     currentBookUrl = url;
-    const loadingTask = pdfjsLib.getDocument(url);
     
-    try {
-        pdfDoc = await loadingTask.promise;
-        document.getElementById('page-count').textContent = pdfDoc.numPages;
+    // UI Switch: Hide Library, Show Reader
+    document.getElementById('library-grid').style.display = 'none';
+    document.getElementById('library-header').style.display = 'none';
+    document.getElementById('reader-view').style.display = 'block';
 
-        // Progress Tracking: Get progress specific to THIS book
-        const savedPage = localStorage.getItem('progress_' + url);
-        pageNum = savedPage ? parseInt(savedPage) : 1;
-        
-        renderPage(pageNum);
-    } catch (error) {
-        alert("Error loading book. Make sure the filename matches exactly!");
-    }
+    const loadingTask = pdfjsLib.getDocument(url);
+    pdfDoc = await loadingTask.promise;
+    document.getElementById('page-count').textContent = pdfDoc.numPages;
+
+    // Load saved progress for this specific book
+    const savedPage = localStorage.getItem('progress_' + url);
+    pageNum = savedPage ? parseInt(savedPage) : 1;
+    
+    renderPage(pageNum);
 }
 
+// 2. RENDER THE PAGE (Optimized for iPhone Retina screens)
 async function renderPage(num) {
     const page = await pdfDoc.getPage(num);
-    const viewport = page.getViewport({ scale: 1.5 });
     
+    // Scale 2.0 makes text crisp on iPhone
+    const viewport = page.getViewport({ scale: 2.0 });
     canvas.height = viewport.height;
     canvas.width = viewport.width;
 
@@ -36,24 +40,29 @@ async function renderPage(num) {
     await page.render(renderContext).promise;
 
     document.getElementById('page-num').textContent = num;
-    
-    // Save progress for this specific book
     localStorage.setItem('progress_' + currentBookUrl, num);
+    
+    // Scroll to top when page changes
+    window.scrollTo(0,0);
 }
 
-// Event Listeners
-document.getElementById('book-selector').onchange = (e) => {
-    if (e.target.value) loadPDF(e.target.value);
-};
+// 3. GO BACK TO LIBRARY
+function showLibrary() {
+    document.getElementById('library-grid').style.display = 'grid';
+    document.getElementById('library-header').style.display = 'block';
+    document.getElementById('reader-view').style.display = 'none';
+}
 
-document.getElementById('prev').onclick = () => {
-    if (pageNum <= 1) return;
-    pageNum--;
-    renderPage(pageNum);
-};
+// 4. SEARCH LOGIC
+document.getElementById('search-bar').addEventListener('input', (e) => {
+    const term = e.target.value.toLowerCase();
+    const cards = document.querySelectorAll('.book-card');
+    cards.forEach(card => {
+        const title = card.textContent.toLowerCase();
+        card.style.display = title.includes(term) ? "flex" : "none";
+    });
+});
 
-document.getElementById('next').onclick = () => {
-    if (pageNum >= pdfDoc.numPages) return;
-    pageNum++;
-    renderPage(pageNum);
-};
+// 5. BUTTON CONTROLS
+document.getElementById('prev').onclick = () => { if (pageNum <= 1) return; pageNum--; renderPage(pageNum); };
+document.getElementById('next').onclick = () => { if (pageNum >= pdfDoc.numPages) return; pageNum++; renderPage(pageNum); };
