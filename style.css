@@ -1,21 +1,124 @@
-/* Dark Mode specific colors */
-body.dark-mode {
-    background: #000000;
-    color: #ffffff;
+* {
+    box-sizing: border-box;
+    -webkit-tap-highlight-color: transparent;
 }
 
-body.dark-mode .book-card {
-    background: #1a1a1a;
-    border-color: #333;
+html, body {
+    margin: 0;
+    font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+    background: #f4f4f4;
+    overscroll-behavior: none;
+    touch-action: manipulation;
 }
 
-/* This filter flips the PDF colors (white becomes black) */
-body.dark-mode canvas {
-    filter: invert(90%) hue-rotate(180deg);
+/* LIBRARY */
+#library-header {
+    display: flex;
+    gap: 10px;
+    padding: 12px;
+    background: white;
+    position: sticky;
+    top: 0;
 }
 
-#mode-toggle {
-    background: #444;
-    font-size: 14px;
-    margin-bottom: 10px;
+#search-bar {
+    flex: 1;
+    padding: 10px;
+    font-size: 16px;
+}
+
+#library-grid {
+    padding: 12px;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+    gap: 12px;
+}
+
+.book-card {
+    padding: 16px;
+    background: white;
+    border-radius: 12px;
+    font-weight: 600;
+    text-align: center;
+}
+
+/* READER */
+#reader-view {
+    background: black;
+    height: 100vh;
+    position: relative;
+}
+
+#reader-header {
+    height: 50px;
+    background: #111;
+    color: white;
+    display: flex;
+    align-items: center;
+    padding: 0 12px;
+    gap: 10px;
+}
+
+#back-btn {
+    background: none;
+    border: none;
+    color: white;
+    font-size: 16px;
+}
+
+/* PROGRESS */
+#progress-container {
+    height: 4px;
+    background: #333;
+}
+
+#progress-bar {
+    height: 100%;
+    width: 0%;
+    background: #4caf50;
+    transition: width 0.2s linear;
+}
+
+canvas {
+    width: 100%;
+    height: auto;
+    display: block;
+}
+
+/* TAP ZONES */
+#touch-layer {
+    position: absolute;
+    top: 54px;
+    left: 0;
+    width: 100%;
+    height: calc(100% - 94px);
+    display: flex;
+    z-index: 10;
+}
+
+#tap-left { width: 30%; }
+#tap-right { width: 70%; }
+
+/* FOOTER */
+#page-footer {
+    height: 40px;
+    background: #111;
+    color: white;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+/* DARK MODE */
+body.dark {
+    background: black;
+}
+
+body.dark .book-card {
+    background: #1e1e1e;
+    color: white;
+}
+
+body.dark canvas {
+    filter: invert(90%) contrast(120%);
 }
