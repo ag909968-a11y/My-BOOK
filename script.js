@@ -1,46 +1,59 @@
-let pdfDoc = null;
-let pageNum = parseInt(localStorage.getItem("lastPage")) || 1;
-let canvas = document.getElementById("pdfCanvas");
-let ctx = canvas.getContext("2d");
+const pdfjsLib = window['pdfjs-dist/build/pdf'];
+pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.4.120/pdf.worker.min.js';
 
-document.getElementById("pdfInput").addEventListener("change", function (e) {
-  const file = e.target.files[0];
-  const reader = new FileReader();
+let pdfDoc = null, 
+    pageNum = 1, 
+    currentBookUrl = "", 
+    canvas = document.getElementById('pdf-canvas'), 
+    ctx = canvas.getContext('2d');
 
-  reader.onload = function () {
-    pdfjsLib.getDocument(reader.result).promise.then(pdf => {
-      pdfDoc = pdf;
-      renderPage(pageNum);
-    });
-  };
+async function loadPDF(url) {
+    currentBookUrl = url;
+    const loadingTask = pdfjsLib.getDocument(url);
+    
+    try {
+        pdfDoc = await loadingTask.promise;
+        document.getElementById('page-count').textContent = pdfDoc.numPages;
 
-  reader.readAsArrayBuffer(file);
-});
+        // Progress Tracking: Get progress specific to THIS book
+        const savedPage = localStorage.getItem('progress_' + url);
+        pageNum = savedPage ? parseInt(savedPage) : 1;
+        
+        renderPage(pageNum);
+    } catch (error) {
+        alert("Error loading book. Make sure the filename matches exactly!");
+    }
+}
 
-function renderPage(num) {
-  pdfDoc.getPage(num).then(page => {
-    let viewport = page.getViewport({ scale: 1.3 });
+async function renderPage(num) {
+    const page = await pdfDoc.getPage(num);
+    const viewport = page.getViewport({ scale: 1.5 });
+    
     canvas.height = viewport.height;
     canvas.width = viewport.width;
 
-    page.render({ canvasContext: ctx, viewport: viewport });
+    const renderContext = { canvasContext: ctx, viewport: viewport };
+    await page.render(renderContext).promise;
 
-    localStorage.setItem("lastPage", num);
-    document.getElementById("status").innerText =
-      `Page ${num} of ${pdfDoc.numPages}`;
-  });
+    document.getElementById('page-num').textContent = num;
+    
+    // Save progress for this specific book
+    localStorage.setItem('progress_' + currentBookUrl, num);
 }
 
-function nextPage() {
-  if (pageNum < pdfDoc.numPages) {
-    pageNum++;
-    renderPage(pageNum);
-  }
-}
+// Event Listeners
+document.getElementById('book-selector').onchange = (e) => {
+    if (e.target.value) loadPDF(e.target.value);
+};
 
-function prevPage() {
-  if (pageNum > 1) {
+document.getElementById('prev').onclick = () => {
+    if (pageNum <= 1) return;
     pageNum--;
     renderPage(pageNum);
-  }
-}
+};
+
+document.getElementById('next').onclick = () => {
+    if (pageNum >= pdfDoc.numPages) return;
+    pageNum++;
+    renderPage(pageNum);
+};

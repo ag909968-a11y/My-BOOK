@@ -1,28 +1,32 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>My Book Reader</title>
-  <link rel="stylesheet" href="style.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>My Personal Library</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.4.120/pdf.min.js"></script>
 </head>
 <body>
+    <div id="app-container">
+        <div id="toolbar">
+            <select id="book-selector">
+                <option value="">-- Choose a Book --</option>
+                <option value="books/harry-potter.pdf">Harry Potter 1</option>
+                <option value="books/atomic-habits.pdf">Atomic Habits</option>
+                </select>
 
-<h2>📘 My Book Reader</h2>
+            <div id="controls">
+                <button id="prev">Prev</button>
+                <span id="page-info"><span id="page-num">0</span> / <span id="page-count">0</span></span>
+                <button id="next">Next</button>
+            </div>
+        </div>
 
-<input type="file" id="pdfInput" accept="application/pdf">
-
-<div id="status"></div>
-
-<canvas id="pdfCanvas"></canvas>
-
-<div class="controls">
-  <button onclick="prevPage()">◀ Prev</button>
-  <button onclick="nextPage()">Next ▶</button>
-</div>
-
-<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
-<script src="script.js"></script>
-
+        <div id="viewer-container">
+            <canvas id="pdf-canvas"></canvas>
+        </div>
+    </div>
+    <script src="script.js"></script>
 </body>
 </html>
