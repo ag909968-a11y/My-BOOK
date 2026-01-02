@@ -1,17 +1,35 @@
-body {
-  font-family: Arial;
-  text-align: center;
-  padding: 10px;
+body { margin: 0; font-family: -apple-system, sans-serif; background: #121212; color: white; }
+#library-header { padding: 15px; position: sticky; top: 0; background: #121212; z-index: 10; }
+#search-bar { width: 90%; padding: 12px; border-radius: 8px; border: none; background: #222; color: white; font-size: 16px; }
+
+#library-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr; /* Two books side-by-side on iPhone */
+    gap: 15px;
+    padding: 15px;
 }
 
-canvas {
-  width: 100%;
-  border: 1px solid #ccc;
-  margin-top: 10px;
+.book-card {
+    background: #1f1f1f;
+    padding: 20px;
+    border-radius: 12px;
+    text-align: center;
+    border: 1px solid #333;
+    aspect-ratio: 2/3;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
 }
 
-.controls button {
-  padding: 10px 15px;
-  margin: 5px;
-  font-size: 16px;
+#toolbar {
+    display: flex;
+    justify-content: space-between;
+    padding: 10px;
+    background: #1f1f1f;
+    align-items: center;
 }
+
+#viewer-container { width: 100%; overflow-y: auto; text-align: center; }
+canvas { max-width: 100%; height: auto; }
+button { background: #007aff; color: white; border: none; padding: 8px 12px; border-radius: 6px; }
