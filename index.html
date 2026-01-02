@@ -3,28 +3,37 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>My Personal Library</title>
+    <title>My Library</title>
     <link rel="stylesheet" href="style.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.4.120/pdf.min.js"></script>
 </head>
 <body>
     <div id="app-container">
-        <div id="toolbar">
-            <select id="book-selector">
-                <option value="">-- Choose a Book --</option>
-                <option value="books/harry-potter.pdf">Harry Potter 1</option>
-                <option value="books/atomic-habits.pdf">Atomic Habits</option>
-                </select>
+        <div id="library-header">
+            <input type="text" id="search-bar" placeholder="Search books...">
+        </div>
 
-            <div id="controls">
+        <div id="library-grid">
+            <div class="book-card" onclick="loadPDF('books/Atomic habits ( PDFDrive ).pdf')">Atomic Habits</div>
+            <div class="book-card" onclick="loadPDF('books/Dont-Believe-Everything-You-Think.pdf')">Don't Believe Everything You Think</div>
+            <div class="book-card" onclick="loadPDF('books/How I Found Freedom In An Unfree World.pdf')">How I Found Freedom</div>
+            <div class="book-card" onclick="loadPDF('books/How To Win Friends And Influence People.pdf')">How to Win Friends</div>
+            <div class="book-card" onclick="loadPDF('books/No More Mr. Nice Guy by Robert Glover.pdf')">No More Mr. Nice Guy</div>
+            <div class="book-card" onclick="loadPDF('books/Surrounded by Idiots PDF.pdf')">Surrounded by Idiots</div>
+            <div class="book-card" onclick="loadPDF('books/The Psychology of Money PDF.pdf')">The Psychology of Money</div>
+            <div class="book-card" onclick="loadPDF('books/The Way Of The Superior Man.pdf')">The Way of the Superior Man</div>
+        </div>
+
+        <div id="reader-view" style="display:none;">
+            <div id="toolbar">
+                <button onclick="showLibrary()">← Back</button>
                 <button id="prev">Prev</button>
                 <span id="page-info"><span id="page-num">0</span> / <span id="page-count">0</span></span>
                 <button id="next">Next</button>
             </div>
-        </div>
-
-        <div id="viewer-container">
-            <canvas id="pdf-canvas"></canvas>
+            <div id="viewer-container">
+                <canvas id="pdf-canvas"></canvas>
+            </div>
         </div>
     </div>
     <script src="script.js"></script>
